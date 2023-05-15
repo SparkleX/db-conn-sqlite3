@@ -1,26 +1,11 @@
-# Microsoft SQL Server driver of db-conn(JDBC)
+# Sqlite3 database driver of db-conn
 
-1) based on tedious, pure javascript
-2) Typescript async/await
 ---
 Connect
 ```
-var config:tds.ConnectionConfig = {
-	authentication: {
-		type: "default",
-		options: {
-			userName: "sa",
-			password: "12345678",
-		},
-	},
-	options: {
-		trustServerCertificate: true,
-	},
-	server: "localhost",
-};
-const driver = new  MssqlDriver();
-const conn: Connection = await driver.connect(config);
-const rt = await conn.execute(`select * from test`);
-console.debug(rt.data);
-await conn.close();
+	const conn = await driver.connect(':memory:');
+	let result = await conn.execute('CREATE TABLE lorem (info TEXT)');
+	result = await conn.execute("INSERT INTO lorem VALUES ('1')");
+	result = await conn.execute("select * from lorem");
+	await conn.close();
 ```
