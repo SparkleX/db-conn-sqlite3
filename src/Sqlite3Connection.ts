@@ -1,96 +1,57 @@
 import { Connection, Result } from "db-conn";
+import * as sqlite3 from "sqlite3";
+import { Statement } from "sqlite3";
 
 export class Sqlite3Connection implements Connection {
-	private client: tds.Connection;
-	public constructor(client: any) {
-		this.client = client;
+	private db: sqlite3.Database;
+	public constructor(db: any) {
+		this.db = db;
 	}
 	public async close(): Promise<void> {
-		this.client.close()
-		delete this.client;
-	}
-	public async execute(sql: string, params?: object | any[] | undefined): Promise<Result> {
-		if (params === undefined) {
-			params = [];
-		}
-		let rt: Result = {data:[],affectedRows:0};
-		return new Promise((resolve, reject) => {
-			const request = new tds.Request(sql, function(err, rowCount) {
-				if(err) {
+		const rt = new Promise<void>((resolve, reject) => {
+			this.db.close((err) => {
+				if (err) {
 					reject(err);
 					return;
 				}
-				rt.affectedRows = rowCount;
+				resolve();
 			});
-			request.on('error', function (err) { 
-				reject(err);
-			});
-			request.on('row', function (columns) { 
-				const object: any = {};
-				for(const key in columns) {
-					object[key] = columns[key].value;
-				}
-				rt.data!.push(object);
-			});
-			request.on("requestCompleted", function () { 
-				resolve(rt);
-			});
-
-			if(Array.isArray(params)) {
-
-			} else {
-				this.addParameterObject(request, params as object);
-			}
-			this.client.execSql(request);
 		});
+		return rt;
 	}
-	private addParameterObject(request: tds.Request, params: object) {
-		for(const name in params) {
-			const value = (params as any)[name];
-			const type = isNaN(value)?tds.TYPES.NVarChar:tds.TYPES.Int;
-			request.addParameter(name, type ,value);
-		}		
+	public async execute(sql: string, params?: object | any[] | undefined): Promise<Result> {
+		const rt = new Promise((resolve, reject) => {
+			this.db.all(sql, (err: Error, rows) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				let result = {
+					data: rows
+				}
+				resolve(result);
+			});
+		});
+		return rt;
 	}
+
 	public async executeQuery(sql: string, params?: object | any[] | undefined): Promise<object[]> {
 		const rt: Result = await this.execute(sql, params);
 		return rt.data!;
 	}
 	public async setAutoCommit(autoCommit: boolean): Promise<void> {
-		return new Promise((resolve, reject) => {
-			if(autoCommit) {
-				resolve();
-			} else {
-				this.client.beginTransaction(err => {
-					if(err) {
-						reject(err);
-						return;
-					}
-					resolve();
-				});
-			}			
-		});
+		if (autoCommit) {
+
+		}
+		else {
+			await this.execute('begin transaction');
+		}
 	}
 	public async commit(): Promise<void> {
-		return new Promise((resolve, reject) => {
-			this.client.commitTransaction(function(err) {
-				if(err) {
-					reject(err);
-					return;
-				}
-				resolve();
-			});
-		});
+		await this.execute('commit');
 	}
 
 	public async rollback(): Promise<void> {
-		return new Promise((resolve, reject) => {
-			this.client.rollbackTransaction(function(err) {
-				if(err) {
-					reject(err);
-					return;
-				}
-				resolve();
-			});
-		});
+		await this.execute('rollback');
 	}
 }
