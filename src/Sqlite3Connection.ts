@@ -21,7 +21,7 @@ export class Sqlite3Connection implements Connection {
 	}
 	public async execute(sql: string, params?: object | any[] | undefined): Promise<Result> {
 		const rt = new Promise((resolve, reject) => {
-			this.db.all(sql, (err: Error, rows) => {
+			this.db.all(sql, params, (err: Error, rows) => {
 				if (err) {
 					reject(err);
 					return;
@@ -41,7 +41,7 @@ export class Sqlite3Connection implements Connection {
 	}
 	public async setAutoCommit(autoCommit: boolean): Promise<void> {
 		if (autoCommit) {
-
+			throw new Error("Not Supported");
 		}
 		else {
 			await this.execute('begin transaction');
