@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "JDBC like database driver for sqlite3",
 	"type": "module",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"scripts": {
 		"prebuild": "npm run clean",
 		"build": "tsc",
