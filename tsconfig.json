@@ -1,20 +1,11 @@
 {
-	"compileOnSave": true,
-	"compilerOptions": {
-		"moduleResolution": "nodenext",
-		"esModuleInterop": true,
-		"module": "ESNext",
-		"target": "ESNext",
-		"outDir": "dist",
-		"declaration": true,
-		"sourceMap": true,
-		"alwaysStrict": true,
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true
-	},
-	"include": ["src"],
-	"exclude": ["**/*.spec.ts"],
-	"ts-node": {
-		"esm": true
-	}
+  "compilerOptions": {
+    "target": "ESNext",      
+    "module": "commonjs",    
+    "outDir": "dist",
+    "esModuleInterop": true, 
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+  },
+  "include": ["src"]
 }

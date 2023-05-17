@@ -2,7 +2,6 @@
 	"name": "db-conn-sqlite3",
 	"version": "1.0.1",
 	"description": "JDBC like database driver for sqlite3",
-	"type": "module",
 	"main": "dist/index.js",
 	"scripts": {
 		"prebuild": "npm run clean",

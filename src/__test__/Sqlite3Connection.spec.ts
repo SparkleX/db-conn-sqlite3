@@ -1,5 +1,5 @@
 import { Connection } from "db-conn";
-import { Sqlite3Driver } from "../Sqlite3Driver.js";
+import { Sqlite3Driver } from "../Sqlite3Driver";
 
 const driver = new  Sqlite3Driver();
 

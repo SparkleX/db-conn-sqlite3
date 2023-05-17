@@ -1,6 +1,6 @@
 import { Driver, Connection } from "db-conn";
 import * as sqlite3 from "sqlite3";
-import { Sqlite3Connection } from "./Sqlite3Connection.js";
+import { Sqlite3Connection } from "./Sqlite3Connection";
 
 export class Sqlite3Driver implements Driver {
 	public async connect(config: string): Promise<Connection> {

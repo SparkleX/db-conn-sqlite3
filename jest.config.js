@@ -1,11 +1,8 @@
-export default {
+const config = {
   transform: {
-    "^.+\\.ts$": ["ts-jest", { useESM: true }],
+    "^.+\\.ts$": ["ts-jest"],
   },
-  extensionsToTreatAsEsm: [".ts"],
-  moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1",
-  },
+ 
   testRegex: "(/__tests__/.*|(\\.|/)spec)\\.ts$",
   moduleFileExtensions: ["ts", "js"],
   collectCoverage: true,
@@ -13,3 +10,5 @@ export default {
   coverageReporters: ["lcov", "text"],
   testEnvironment: "node",
 };
+
+module.exports = config;
